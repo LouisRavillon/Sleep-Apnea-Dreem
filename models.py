@@ -1,8 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import transformers
-from transformers import BertModel
 
 allowed_model_names = ['conv', 'rnn', 'lstm', 'encoder_decoder', 'grouped_conv1d']
 
@@ -357,9 +355,6 @@ def create_model(p):
         elif p.model == 'lstm':
           p.input_dim = p.input_dim * len(p.signal_ids)
           model = LSTM(p)
-        elif p.model == 'transformer':
-          p.input_dim = p.input_dim * len(p.signal_ids)
-          model = BERT(p)
         elif p.model == 'grouped_conv1d':
           model = GroupedConv1D(p)
         print(f'{p.model} was created\n')

@@ -13,7 +13,7 @@
     "lr_scheduler": true,
     "lr_step": 15,
     "tracking": "val_loss",
-    "signal_ids": [1,3],
+    "signal_ids": [1,2,3],
     "model": "encoder_decoder",
     "encoder": "grouped_conv2d",
     "decoder": "lstm",
