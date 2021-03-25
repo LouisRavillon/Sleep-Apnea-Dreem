@@ -166,32 +166,6 @@ def test_model(model, test_loader, params, threshold=0.5):
     preds_df = format_prediction_to_submission_canvas(preds_dict)
     return preds_df
 
-
-def plot_curves(train_losses, train_accuracies, validation_losses, validation_accuracies, params):
-
-    x = range(params.nepochs)
-    fig, axs = plt.subplots(2, 1)
-    axs[0].plot(x, train_losses, label='train', color='#6F1BDA')
-    axs[0].plot(x, validation_losses, label='val', color='#DA1BC6')
-    axs[0].set_xlabel('epochs')
-    axs[0].set_ylabel('loss')
-    axs[0].set_title('Loss')
-    axs[0].legend()
-    axs[1].plot(x, train_accuracies, label='train', color='#6F1BDA')
-    axs[1].plot(x, validation_accuracies, label='val', color='#DA1BC6')
-    axs[1].set_xlabel('epochs')
-    axs[1].set_ylabel('acc')
-    axs[1].set_title('Accuracy')
-    axs[1].legend()
-
-    # Hide x labels and tick labels for top plots and y ticks for right plots.
-    for ax in axs.flat:
-        ax.label_outer()
-
-    plt.savefig('curves.pdf')
-    plt.show()
-
-
 def replace_tuple_at_index(tup, ix, val):
     lst = list(tup)
     lst[ix] = val

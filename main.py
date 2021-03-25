@@ -14,7 +14,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 
 from models import create_model
 from dataset import SleepApneaDataModule, EmbeddedDataModule
-from utils import open_config_file, train_model, evaluate_model, test_model, epoch_time, plot_curves
+from utils import open_config_file, train_model, evaluate_model, test_model, epoch_time
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', type=str, default="config/default.json", metavar='N', help='config file')
@@ -108,9 +108,12 @@ if params.post_process:
 bacc = np.round(np.max(val_accuracies),4)
 print(f'End of training: best val loss = {bvl} | associated val_acc = {bvl_acc}, val_acc_pp = {bvl_acc_pp} | best val acc = {bacc}\n')
 
-plot_curves(train_losses, train_accuracies, val_losses, val_accuracies, params)
-if params.post_process:
-    plot_curves(train_losses, train_accuracies_pp, val_losses, val_accuracies_pp, params)
+np.save('train_loss',np.array(train_losses))
+np.save('train_acc_pp',np.array(train_accuracies_pp))
+np.save('train_acc',np.array(train_accuracies))
+np.save('val_loss',np.array(val_losses))
+np.save('val_acc_pp',np.array(val_accuracies_pp))
+np.save('val_acc',np.array(val_accuracies))
 
 ### TESTING
 
