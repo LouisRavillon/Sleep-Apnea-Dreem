@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import transformers
 from transformers import BertModel
 
-allowed_model_names = ['conv', 'rnn', 'lstm', 'gru', 'transformer', 'encoder_decoder', 'grouped_conv1d']
+allowed_model_names = ['conv', 'rnn', 'lstm', 'encoder_decoder', 'grouped_conv1d']
 
 
 class Force_connex(nn.Module):
@@ -307,46 +307,6 @@ class LSTM(nn.Module):
     return torch.sigmoid(x)
 
 
-class BERT(nn.Module):
-
-  def __init__(self, p):
-
-    super().__init__()
-
-    self.bert_config = transformers.BertConfig(
-      vocab_size=1,
-      hidden_size=p.input_dim,
-      num_hidden_layers=p.n_layers,
-      num_attention_heads=p.n_heads,
-      intermediate_size=p.ffn_dim,
-      hidden_dropout_prob=p.dropout_p,
-      attention_probs_dropout_prob=p.dropout_p,
-      max_position_embeddings=p.seq_length,
-      position_embedding_type='absolute'
-    )
-
-    self.bert = BertModel(self.bert_config)
-    self.conv = nn.Conv2d(1, 1, kernel_size=(1,p.input_dim))
-    self.fc = nn.Linear(in_features=p.input_dim, out_features=1)
-    self.relu = nn.ReLU()
-    self.last_layer = p.last_layer
-
-  def forward(self, x):
-
-    x = self.bert(inputs_embeds=x)
-    x = x['last_hidden_state']
-    if self.last_layer == 'fc':
-      x = self.fc(x)
-    elif self.last_layer == 'conv':
-      x = x.unsqueeze(1)
-      x = self.conv(x)
-    else:
-      ValueError(f'{self.last_layer} not supported yet')
-    x = x.squeeze()
-
-    return torch.sigmoid(x)
-
-
 class EncoderDecoder(nn.Module):
 
   def __init__(self, p):
@@ -369,9 +329,6 @@ class EncoderDecoder(nn.Module):
     if p.decoder == 'lstm':
       p.input_dim = p.conv_output_dim
       self.decoder = LSTM(p)
-    elif p.decoder == 'transformer':
-      p.input_dim = p.conv_output_dim
-      self.decoder = BERT(p)
     elif p.decoder != 'conv':
       raise ValueError(f'{p.model} not supported yet')
 

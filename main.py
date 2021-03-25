@@ -96,8 +96,6 @@ for epoch in range(params.nepochs):
     end_time = time.time()
     epoch_mins, epoch_secs = epoch_time(start_time, end_time)
     print(f'End of epoch {epoch+1} / {params.nepochs} \t Time Taken:  {epoch_mins}m {epoch_secs}s')
-    # print(f'Train loss: {np.round(train_loss,6)} \t Train acc: {np.round(train_acc,4)}')
-    # print(f'Val loss: {np.round(valid_loss,6)} \t Val acc: {np.round(valid_acc,4)}\n')
     print(f'Train loss: {np.round(train_loss,6)} \t Train acc: {np.round(train_acc,4)} \t Train acc pp: {np.round(train_acc_pp,4)}')
     print(f'Val loss: {np.round(valid_loss,6)} \t Val acc: {np.round(valid_acc,4)} \t Val acc pp: {np.round(valid_acc_pp,4)}\n')
 
@@ -108,18 +106,12 @@ if params.post_process:
 bacc = np.round(np.max(val_accuracies),4)
 print(f'End of training: best val loss = {bvl} | associated val_acc = {bvl_acc}, val_acc_pp = {bvl_acc_pp} | best val acc = {bacc}\n')
 
-np.save('train_loss',np.array(train_losses))
-np.save('train_acc_pp',np.array(train_accuracies_pp))
-np.save('train_acc',np.array(train_accuracies))
-np.save('val_loss',np.array(val_losses))
-np.save('val_acc_pp',np.array(val_accuracies_pp))
-np.save('val_acc',np.array(val_accuracies))
-
 ### TESTING
 
 params = open_config_file(args.config)
 print('Beginning testing...')
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=False)
+
 # load best weights from training (based on params.tracking value)
 best_model = create_model(params)
 best_model.load_state_dict(torch.load('best_model.pt'))
